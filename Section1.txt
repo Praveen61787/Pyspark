@@ -1,0 +1,249 @@
+Introduction to PySpark/Spark
+
+PySpark is a library which us used to run python applications using apache spark capabilities 
+In other words Pyspark is a python api for spark
+
+Spark is not a programming language
+
+Its is library used that a programming language can use to write spark based application
+
+you can write spark applications in java, R, Python and scala
+
+pyspark allow you to write python based data processing applications that execute on distributed cluster in parallel
+
+
+Apache spark is a analytical processing engine for large scae powerful distribute data processing and also machine learning applications.
+
+
+To simplify the above definition lets put it this way 
+
+In this world there are large data and 90% of the data was only created in the last 2-3 years 
+
+Like Facebook has cluster of 2000-3000 machines that process and hold a staggering 25-30 petabytes of data (1000 tb of data)
+
+to solve this big data problem Hadoop and mapreduce are invented 
+
+
+Hadoop and MapReduce are invented to solve the bigdata storage and processing problem
+
+Hadoop is a set of software libraries that are designed to function over distributed cluster of machines, Mapreduces is a data processing engine 
+
+But the problem with the mapreduces is that the data processing happens only in disk which more time to process 
+
+to solve this problem spark was invented 
+Spark performs 10 times faster than mapreduces
+if then processing is om disk ,but 100 times faster in memory
+
+
+Y we need spark because we need spark to perform data clustering in the most efficient reliable and most fastest way possible
+ 
+
+Example Stock market
+
+
+Spark consist of a large set of data analytics and machine learning libraries that makes it a must use data processing engine by data scientist and enginners
+
+
+Spark Architecture
+
+Spark works in a master slave architecture. The master node is referred as "driver" and slave nodes are referred as "workers".
+
+See the diagram for better clarification
+
+Whenever you run the spark application a spark session creates a spark context which is the entry point to your application
+
+Spark operations which are you data transformations are executed on worker nodes
+
+Resources on worker nodes are managed by a cluster manger   \
+
+
+See the diagram for more clarification
+
+
+
+Like earlier said the spark applications run over a cluster of machines
+
+To manage the cluster of machines companies relies on  resources management such as Apache Yarn, or in Spark Standalone mode
+
+
+The two main components of the resource manager are the cluster manager and the worker 
+
+The cluster manager knows where the workers are located, how much memory and CPU cores each worker has
+
+
+When you execute a spark program, the cluster manager
+determines how many work nodes will be required, how
+much RAM and CPU on each worker node to execute your
+program
+
+
+The Spark Driver is the central coordinator of Spark
+Application
+The Spark Driver interacts with the cluster Manager to figure
+out which machines to run processing logic on
+The Spark Driver requests the cluster manager to launch the
+Spark executor to do the processing on worker nodes
+The Spark Driver creates a Spark Session (Creates a Spark
+Context) which then executes your Spark Configurations to
+allocate the required API's for your application
+
+
+
+Spark Unified stack
+
+November 2016, the ACM (Association of Computing
+Machinery) recognized Spark as a Unified Engine for Big Data
+Processing
+The Spark Unified Stack is built on top of a strong foundation
+known as the Spark Core.
+The Spark Core provides all the necessary functionality to
+manage and run distributed applications such as scheduling
+and fault tollerence
+
+The Spark  Modules and components are built on top of Spark
+ See the diagrama for the better calarification
+
+
+Spark Core Components
+Spark SQL: Designed to work with database tables and
+structured file formats such as CSV, JSON, Avro, ORC, Parquet.
+Can read data into a dataframe. Can use Pure SQL.
+
+Spark Structured Streaming: built to write applications for real-time stream processing that offers high throughput and is also fault tolerant.
+
+Spark MLib: Provides many popular machine learning
+alogorithms out of the box
+
+Spark GraphX: graph processing operates on data structures which are used to represent real-life networks, such as
+LinkedIn that connect professional people together
+
+
+By now we all kknow why spark is referred as Unified Stack because  you have almost every possible data processing solution right off the box that covers this scope from batch processing, graph, sql, stream processing and machine learning
+
+
+How to install PySpark
+
+pip install pyspark
+
+After downloading the pyspark set the environment variables for pyspark refer the image 
+
+
+
+After installing the pyspark we have to check the pyspark by testing with a program
+
+1.open cmd and type pyspark 
+
+
+
+Java is spark dependency and Hadoop is the another spark dependency
+
+
+to install Hadoop 
+open  https://github.com/steveloughran/winutilis
+there select the latest version
+like hadoop-3.1.2
+after selecting hadoop-3.1.2 download winutilis.exe
+
+after downloading the winutilis.exe create a folder in c driver called Hadoop 
+Inside the Hadoop folder create another folder called bin
+Copy that downloaded winutilis.exe and paste in the bin folder of the Hadoop
+after that set the environment variables 
+
+
+
+After that install Visual build tools from here https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+After intsalling thre visual build tools select c++ build tools and hit install after installation restart your system and download the Jupiter note book
+
+
+
+Py4J is a Python library that enables seamless integration between Python and Java. It allows Python programs to dynamically access and interact with Java objects running in a Java Virtual Machine (JVM). This is achieved by creating a communication gateway between the two languages, enabling Python to call Java methods and access Java classes as if they were native Python objects.
+
+
+To install Jupiter in cmd and type pip install jupyter and it will automatically downloads the jupyter for u
+after the installation to check the whether the jupyter is downloaded or not type pip list u should be able to see the jupyter dependencies
+
+
+to test Jupiter follow these commands
+1.mkdir sparktest
+2.cd sparktest
+3.jupyter notebook ----> these prompt should load and open the jupyter note book in your browser and if any foreseen reasons if the jupyter notebook didn't closed then open browser and type localhost:8888/tree 
+4.after the jupyter note book opened select new button and select python3 a new jypter note book should open now
+5.after opening new python file save that file with some name like spark Test
+Note:
+Jupyter Notebook has no direct relationship with spark. to use "Spark" you would have to import the PySpark libraries
+6.In the new note book Type the following code
+import pyspark
+sc = pyspark.SparkContext('local[*]')//basically local this line will connect to your local cluster (computer) and create RDD  and[*] means create as many possible worker threads on logical cores(cpu) to run your spark job in parallel
+7.run the program u should be able to see [] 
+
+8.In the second shell type 
+big_list=range(1000)
+rdd=sc.parallelize(big_list,2)
+odds=rdd.filter(lambda x:x%2 !=0)
+odd.take(5)
+9.the result should be [1,3,5,7,9]
+10.save and checkpoint
+11.To shutdown click on the jupyter logo and and select quit 
+
+
+SPARK UI
+
+Apache spark provides a spark ui to monitor the statu s of ur spark application when it executes over the cluster 
+
+Lets go through the spark web ui and see how we can use it to track our spark jobs to do that open cmd and type pyspark
+
+Type these code
+
+nums_list=[1,2,3,4]
+rdd=sc.parallelize(nums_list)
+squared=rdd.map(lambda x:x*x).collect()
+for num in squared:
+   print(num)
+and press enter two times u will get the output
+
+To check the type of the rdd and squared 
+type(rdd)
+type(squared)
+
+Do not close terminal and open browser and type localhost:4040 and hit enter
+
+after opening the localhost:4040
+we will see a ui page there mainly u should focus on the scheduling and description 
+
+there are 3 types of scheduling
+1.FIFO(Standalone)
+2.Apache Yarn
+3.Apache Mesos
+
+Since we are running on local machine FIFO(Standalone) is the default one and 
+we dont have Yarn and Mesos installed, which will only make senses in a large cluster
+
+For more clarification switch to Executor tab
+
+
+
+A Spark Job is equivalent to the number of actions in a spark application
+Each Spark job should have at least one stage 
+
+A spark job can have one or more stages depending on what operations can be performed serially or in parallel
+
+Stages can represent a unit of work
+Each Stage can have one or more tasks.
+
+lets look at that the event timeline(its like a graph)
+the event timeline should just give us an indication of application flow over a period of time
+
+It gives us information of when and executed driver was instantiated and its also shows when the collective action was called
+
+now switch to the Stage tab and u should be able to see the description of the spark job and now click on the Description u should be able to see DAG(Directed Acyclic Graph) Visualization
+Lets learn about the terminology later 
+
+Lets have a look at the aggregated matrix by executor
+To understand executables, let's revert back to Stage's
+Spark Stages can represent a unit of work
+Each Stage can have one or more tasks.and federated to each spark executor so the execute will execute the task and each task is mapped to one cpu goal
+
+
+
+

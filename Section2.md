@@ -1,0 +1,288 @@
+&nbsp;In the Section 2 we will learn about the spark application and session
+
+
+
+## Spark Session Obejct Creation
+
+First Open cmd
+
+1.Cd sparktest
+
+2.mkdir salesdata
+
+3.cd salesdata
+
+4.mkdir data
+
+
+
+After that download the sales\_record.csv file from the udemy resources and move this file to the recently created directory
+
+
+
+
+
+Start jupyter notebook
+
+in cmd
+
+1.jupyter notebook
+
+after opening the jupyter notebook select new and slect new python and save as Sales Data
+
+
+
+lets import pyspark libraries to create a spark sessions and also to aggergrate data"count sales data by region and country"
+
+
+
+type
+
+1.from pyspark.sql import SparkSession
+
+from pyspark.sql import count
+
+and run it 
+
+
+
+Our Spark Program will make use of sparksql because its easier to explain concepts such as the spark session and application
+
+
+
+spark = (SparKSession.builder.appName("TotalOrdersPerRegionCountry").getCreate())
+
+
+
+The SparkSession.builder in PySpark is a powerful tool for initializing or retrieving a SparkSession, which serves as the entry point for all PySpark applications.
+
+
+
+To create a SparkSession, you use the builder pattern. If a SparkSession already exists, the getOrCreate() method retrieves it; otherwise, it creates a new one based on the specified configurations.
+
+
+
+
+
+Run it 
+
+
+
+SparkSession is an object which is used to get or create a new spark session
+
+Note:
+
+There can only be one SparkSession per JVM. PySpark complies to Java Byte Code
+
+
+
+Now to assign the position we needed to call the sparknation builder in a class, the class will give us access to the same function to offically create a spark application
+
+
+
+appName accepts only one parameter
+
+The Parameter sets the name of the application which will be shown in the spark web ui and then after we will need to call the getOrCreate function to finally assign the session to the spark variable
+
+
+
+
+
+To check the type of the spark type 
+
+type(spark)
+
+u should get pyspark.sql.session.SparkSession
+
+
+
+
+
+As we know the core of the sparl application is the spark driver which creates the spark session object
+
+
+
+
+
+## Spark Execution
+
+
+
+Before execution first we need to look at these sales data into a spark data frame and we need a variable that will hold the file location and then use these spark session functions to read csv file and assign it to a variable to hold the data
+
+
+
+
+
+sales\_file = "data/sales\_records.csv"
+
+sales\_df = (spark.read.format("csv").option("header",true).option("inferSchema",true).load(sales\_files))
+
+
+
+//this line  means spark.read.fornat means we are telling the spark session that we are passing csv file and option()is telling that the csv file have header
+
+
+
+
+
+What is a DataFrame?
+
+A dataframe is a distributed collection of data organized into rows and columns Just like Database tables
+
+refer the image for more clarification
+
+
+
+
+
+When we are loading data into the data frame, we also needed to infer a schema, basically a schema is a strcuture that describes how the data is organized
+
+Take a look at the Csv file the first line is the Header where each column of data separted by commas.
+
+
+
+So the header information here is the schema, the schema information will allow us to select individual columns of data that we are interested in.
+
+
+
+Now lets select spark transformation function to print out a new record
+
+
+
+
+
+sales\_file = "data/sales\_records.csv"
+
+sales\_df = (spark.read.format("csv").option("header",true).option("inferSchema",true).load(sales\_files))
+
+sales\_df.select("Region","Country","Order\_ID").show(n=10 , truncate = False)
+
+
+
+
+
+to know the type of the data the printed
+
+type(sales\_df)
+
+
+
+count\_sales\_df =(sales\_df.select("Region","Country","Order\_ID").groupBy("Region","Country").agg(count("Order\_ID").alias("Total Orders")).orderBy("Total Orders", ascending=False)
+
+count\_sales\_df.show(n=10,truncate=False)
+
+Print("Total Rows= ", (count\_sales\_df.count())
+
+
+
+Spaark Transformations
+
+Spark has two types of transformations. which are called as narrow and wide transformations
+
+
+
+
+
+A Narrow transformation is where output can be computered from a single input partition
+
+refer the image
+
+Single input partition means the data is divided into the partitions and each partitions is considererd as input 
+
+For each input there will be separate output and there is no need for data shufflings means like combining the output of the each partition 
+
+
+
+
+
+As for the wide transformations groupBy and orderBy instructs a spark to perform wide transformations simply beacausr it will force the worker nodes to shuffles the data
+
+
+
+
+
+Shuffling means the action to combine related data and arranged into a new partition
+
+
+
+
+
+## DAG VISUALIZATION
+
+
+
+before going to the spark ui select kenel and select restart and run all
+
+
+
+Now in a new tab type localhost:4040
+
+&nbsp;
+
+click on the stage tab now u will see atleast 8 stages and each stage represents a unit of work
+
+
+
+Click on the stage 0
+
+
+
+Note:
+
+PySpark code gets converted into Java Byte Code using py4j library which communicates with the built-in Java API.
+
+
+
+The Storage can tell a story about our spark program
+
+
+
+Spark has this lazy execution means is that your write the transformations but they actually run until you call an action 
+
+**lets take an example**
+
+count\_sales\_df =(sales\_df.select("Region","Country","Order\_ID").groupBy("Region","Country").agg(count("Order\_ID").alias("Total Orders")).orderBy("Total Orders", ascending=False)
+
+count\_sales\_df.show(n=10,truncate=False)
+
+Print("Total Rows= ", (count\_sales\_df.count())
+
+
+
+**in this program we have groupBy and orderBy these two will not be executed until action is called such as show() and counts executed**
+
+ 
+
+
+
+**Lets start with the stage zero click on the stage zero**
+
+**and expand the DAG Visualization**
+
+
+
+**DAG allows you to see how the unit of work was executed in a visual**
+
+
+
+**Remember a data frame is an RDD underneath** 
+
+
+
+
+
+**Click on the associated job Ids**
+
+**and expand the DAG Visualization**
+
+
+
+
+
+**as we can see the in DAG after the Scan the csv file spark calling another function WholeStageCodegen**
+
+
+
+**This is a code generator that converts the spark sql code into java byte code for improving the performance of the clusters**
+
