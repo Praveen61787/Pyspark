@@ -921,4 +921,88 @@ Output:
 
 
 
+What is COUNT DISTINCT?
+
+countDistinct() is an aggregation function that tells you:
+
+👉 How many unique values exist in a column (or combination of columns).
+
+This is different from a normal count(), which counts all rows, including duplicates.
+
+
+How COUNT DISTINCT Works
+
+Spark’s function is:
+
+from pyspark.sql.functions import countDistinct
+
+
+Usage:
+
+df.select(countDistinct("City")).show()
+
+
+Output example:
+
++---------------------+
+|count(DISTINCT City) |
++---------------------+
+| 3                   |
++---------------------+
+
+🔵 COUNT DISTINCT with GROUP BY
+
+This is where it becomes powerful.
+
+Example:
+“How many unique products were sold per year?”
+
+df.groupBy("Year") \
+  .agg(countDistinct("Product").alias("UniqueProducts")) \
+  .show()
+
+
+Output:
+
++----+---------------+
+|Year|UniqueProducts |
++----+---------------+
+|2019| 15            |
+|2020| 18            |
++----+---------------+
+
+
+Spark grouped by Year first
+→ then counted distinct Product values inside each group.
+
+🔥 COUNT DISTINCT on multiple columns
+
+You can count unique combinations.
+
+Example:
+“How many unique (City, State) combinations exist?”
+
+df.select(countDistinct("City", "State")).show()
+
+
+Or with groupBy:
+
+df.groupBy("State") \
+  .agg(countDistinct("City").alias("CitiesInState")) \
+  .show()
+
+
+Example output:
+
++-----+--------------+
+|State|CitiesInState |
++-----+--------------+
+|CA   | 4            |
+|NY   | 2            |
+|TX   | 1            |
++-----+--------------+
+
+
+
+
 
